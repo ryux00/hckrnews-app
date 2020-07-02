@@ -7,6 +7,10 @@
  */
 
 import React, {useState} from 'react';
+import 'react-native-gesture-handler';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+
 import {
   SafeAreaView,
   StyleSheet,
@@ -17,7 +21,11 @@ import {
   StatusBar,
 } from 'react-native';
 
-import Story from "./components/story"
+import Story from './components/story';
+import Details from './components/details';
+
+const Stack = createStackNavigator();
+const Homepage = () => {};
 
 const App = () => {
   const [postIds, setPostIds] = useState([]);
@@ -35,6 +43,23 @@ const App = () => {
         return items;
       });
     return items;
+  };
+
+  const loadMoreStories = () => {
+    let current_length = processedPosts.length;
+    let display = [];
+    let ids_to_fetch = postIds
+      .slice(current_length, current_length + 20)
+      .forEach(story_id => {
+        getStoryData(story_id).then(result => {
+          display.push(result);
+          if (display.length == 20 || current_length == 80) {
+            setProcessedPosts(prevItems => {
+              return [...prevItems, ...display];
+            });
+          }
+        });
+      });
   };
 
   const fetchTopPosts = () => {
@@ -66,13 +91,31 @@ const App = () => {
     fetchTopPosts();
     console.log('componentDidMount');
   }, []);
+  const Homepage = ({navigation}) => {
+    return (
+      <View style={styles.container}>
+        <FlatList
+          data={processedPosts}
+          renderItem={({item,index}) => (
+            <Story item={item} story_rank={index} navigation={navigation}></Story>
+          )}
+          onEndReached={loadMoreStories}
+          onEndReachedThreshold={0.5}
+        />
+      </View>
+    );
+  };
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={processedPosts}
-        renderItem={({item}) => (<Story item={item}></Story>)}
-      />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Homepage} />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="Details"
+          component={Details}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
