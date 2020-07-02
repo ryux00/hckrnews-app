@@ -8,9 +8,11 @@ const Story = props => {
       <View style={styles.listItemView}>
         <Text
           style={styles.listItemText}
-        //   onPress={() => Linking.openURL(props.item.hckr_url)}
-        >
-          {props.item.title}
+          //   onPress={() => Linking.openURL(props.item.hckr_url)}
+          onPress={() =>
+            props.navigation.navigate('Details', {story_detail: props.item})
+          }>
+          {props.story_rank + 1}) {props.item.title}
         </Text>
       </View>
       <View style={styles.listItemScore}>
@@ -49,6 +51,7 @@ const styles = StyleSheet.create({
   },
   listItemText: {
     fontSize: 15,
+    fontWeight: 'bold',
   },
   listItemIcon: {
     paddingHorizontal: 10,
