@@ -51,7 +51,6 @@ class Story extends React.PureComponent {
             size={20}
             color="firebrick"
             style={this.styles.listItemIcon}
-            //   onPress={() => this.props.deleteItem(this.props.item.id)}
           />
           <Text style={this.styles.listItemText}>{this.props.item.score}</Text>
 
@@ -60,9 +59,8 @@ class Story extends React.PureComponent {
             size={20}
             color="firebrick"
             style={this.styles.listItemIcon}
-            //   onPress={() => this.props.deleteItem(this.props.item.id)}
           />
-          <Text style={this.styles.listItemText}>{this.props.item.score}</Text>
+          <Text style={this.styles.listItemText}>{this.props.item.descendants}</Text>
         </View>
       </TouchableOpacity>
     );
