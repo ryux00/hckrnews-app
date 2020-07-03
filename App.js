@@ -11,21 +11,13 @@ import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  FlatList,
-  StatusBar,
-} from 'react-native';
+import {StyleSheet, View, FlatList} from 'react-native';
 
 import Story from './components/story';
 import Details from './components/details';
+import List from './components/list';
 
 const Stack = createStackNavigator();
-const Homepage = () => {};
 
 const App = () => {
   const [postIds, setPostIds] = useState([]);
@@ -40,6 +32,7 @@ const App = () => {
       })
       .then(items => {
         items.hckr_url = 'https://news.ycombinator.com/item?id=' + story_id;
+        items.uid = story_id;
         return items;
       });
     return items;
@@ -53,7 +46,7 @@ const App = () => {
       .forEach(story_id => {
         getStoryData(story_id).then(result => {
           display.push(result);
-          if (display.length == 20 || current_length == 80) {
+          if (display.length == 20) {
             setProcessedPosts(prevItems => {
               return [...prevItems, ...display];
             });
@@ -91,24 +84,20 @@ const App = () => {
     fetchTopPosts();
     console.log('componentDidMount');
   }, []);
-  const Homepage = ({navigation}) => {
-    return (
-      <View style={styles.container}>
-        <FlatList
-          data={processedPosts}
-          renderItem={({item,index}) => (
-            <Story item={item} story_rank={index} navigation={navigation}></Story>
-          )}
-          onEndReached={loadMoreStories}
-          onEndReachedThreshold={0.5}
-        />
-      </View>
-    );
-  };
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={Homepage} />
+        <Stack.Screen name="Home">
+          {props => (
+            <List
+              processedPosts={processedPosts}
+              loadMoreStories={loadMoreStories}
+              processedPosts={processedPosts}
+              navigation={props.navigation}
+            />
+          )}
+        </Stack.Screen>
         <Stack.Screen
           options={{headerShown: false}}
           name="Details"
@@ -118,11 +107,5 @@ const App = () => {
     </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;
