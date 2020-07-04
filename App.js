@@ -11,9 +11,8 @@ import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {StyleSheet, View, FlatList} from 'react-native';
+import {StyleSheet, View, FlatList, ActivityIndicator} from 'react-native';
 
-import Story from './components/story';
 import Details from './components/details';
 import List from './components/list';
 
@@ -85,27 +84,47 @@ const App = () => {
     console.log('componentDidMount');
   }, []);
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home">
-          {props => (
-            <List
-              processedPosts={processedPosts}
-              loadMoreStories={loadMoreStories}
-              processedPosts={processedPosts}
-              navigation={props.navigation}
-            />
-          )}
-        </Stack.Screen>
-        <Stack.Screen
-          options={{headerShown: false}}
-          name="Details"
-          component={Details}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+  if (Object.keys(processedPosts).length == 0) {
+    return (
+      <View style={[styles.container, styles.horizontal]}>
+        <ActivityIndicator size="large" color="orange" />
+      </View>
+    );
+  } else {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Home">
+            {props => (
+              <List
+                processedPosts={processedPosts}
+                loadMoreStories={loadMoreStories}
+                processedPosts={processedPosts}
+                navigation={props.navigation}
+              />
+            )}
+          </Stack.Screen>
+          <Stack.Screen
+            options={{headerShown: false}}
+            name="Details"
+            component={Details}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  horizontal: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 10,
+  },
+});
 
 export default App;
