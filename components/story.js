@@ -35,13 +35,12 @@ class Story extends React.PureComponent {
         <View style={this.styles.listItemView}>
           <Text
             style={this.styles.listItemText}
-            //   onPress={() => Linking.openURL(this.props.item.hckr_url)}
             onPress={() =>
               this.props.navigation.navigate('Details', {
                 story_detail: this.props.item,
               })
             }>
-            {this.props.story_rank + 1})
+            {this.props.story_rank + 1}){" "}
             {this.props.item.title}
           </Text>
         </View>

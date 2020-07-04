@@ -1,10 +1,29 @@
 import React from 'react';
 import {View, Text, StyleSheet, Linking} from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome5';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {WebView} from 'react-native-webview';
+
+const Tab = createMaterialTopTabNavigator();
 
 const Details = props => {
   const {story_detail} = props.route.params;
+  console.log(story_detail);
+  const comments = () => {
+    return <WebView source={{uri: story_detail.hckr_url}} />;
+  };
+  const article = () => {
+    if (story_detail.text == undefined) {
+      return <WebView source={{uri: story_detail.url}} />;
+    } else {
+      return (
+        <View style={styles.header}>
+          <Text>{story_detail.text}</Text>
+        </View>
+      );
+    }
+  };
+
   return (
     <View style={styles.header}>
       <Text
@@ -29,9 +48,11 @@ const Details = props => {
         />
         <Text style={styles.listItemText}>{story_detail.descendants}</Text>
       </View>
-      <WebView
-        source={{uri: story_detail.hckr_url}}
-      />
+      <Tab.Navigator backBehavior="none" tabBarPosition="bottom">
+        <Tab.Screen name="comments" component={comments} />
+        <Tab.Screen name="article" component={article} />
+      </Tab.Navigator>
+      {/* <WebView source={{uri: story_detail.hckr_url}} /> */}
     </View>
   );
 };

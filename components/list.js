@@ -4,7 +4,6 @@ import {View, Text, StyleSheet, Linking, FlatList} from 'react-native';
 import Story from './story';
 
 const List = props => {
-  console.log(props.navigation);
   return (
     <View style={styles.container}>
       <FlatList
