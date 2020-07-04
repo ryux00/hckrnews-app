@@ -7,7 +7,7 @@ import {WebView} from 'react-native-webview';
 const Tab = createMaterialTopTabNavigator();
 
 const Details = props => {
-  const {story_detail} = props.route.params;
+  const {story_detail, scoreColor} = props.route.params;
   console.log(story_detail);
   const comments = () => {
     return <WebView source={{uri: story_detail.hckr_url}} />;
@@ -28,14 +28,14 @@ const Details = props => {
     <View style={styles.header}>
       <Text
         style={styles.text}
-        onPress={() => Linking.openURL(story_detail.hckr_url)}>
+        onPress={() => Linking.openURL(story_detail.url)}>
         {story_detail.title}
       </Text>
       <View style={styles.listItemScore}>
         <Icon
           name="heart"
           size={20}
-          color="firebrick"
+          color={scoreColor(story_detail.score)}
           style={styles.listItemIcon}
         />
         <Text style={styles.listItemText}>{story_detail.score}</Text>
@@ -43,10 +43,17 @@ const Details = props => {
         <Icon
           name="comment-alt"
           size={20}
-          color="firebrick"
+          color={scoreColor(story_detail.descendants)}
           style={styles.listItemIcon}
         />
         <Text style={styles.listItemText}>{story_detail.descendants}</Text>
+        <Icon
+          name="external-link-alt"
+          size={20}
+          color="black"
+          onPress={() => Linking.openURL(story_detail.hckr_url)}
+          style={{...styles.listItemIcon, ...styles.IconExternal}}
+        />
       </View>
       <Tab.Navigator backBehavior="none" tabBarPosition="bottom">
         <Tab.Screen name="comments" component={comments} />
@@ -74,6 +81,9 @@ const styles = StyleSheet.create({
   },
   listItemIcon: {
     paddingHorizontal: 10,
+  },
+  IconExternal: {
+    marginLeft: 'auto',
   },
 });
 
